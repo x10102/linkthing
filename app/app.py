@@ -14,6 +14,7 @@ from db import database, User, UserRole, DynamicCode
 
 from blueprints.index import IndexController
 from blueprints.auth import AuthController
+from blueprints.qr import QRController
 from extensions import login_manager, babel
 
 app = Flask(__name__)
@@ -61,6 +62,7 @@ def init_db() -> None:
 def register_blueprints() -> None:
     app.register_blueprint(IndexController)
     app.register_blueprint(AuthController)
+    app.register_blueprint(QRController)
 
 # Sounds cooler than just 'admin' imo
 def create_administrator(username: str = 'sysop', password: str = 'mikumiku') -> None:

@@ -21,6 +21,7 @@ def login():
     return render_template('auth/login.j2', form=login_form)
     
 @AuthController.route('/logout')
+@login_required
 def logout():
     logout_user()
     flash(_('Logged out'))

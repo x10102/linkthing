@@ -1,21 +1,20 @@
 {% extends 'base.j2' %}
 
 {% block content %}
-
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     {% for message in messages %}
-      <p class="w-full h-10 bg-green-500 text-center self-start">{{ message }}</p>
+      <p class="w-full h-10 bg-green-500 text-center">{{ message }}</p>
     {% endfor %}
   {% endif %}
 {% endwith %}
 <div class="flex flex-col items-center justify-center h-full">
   <form method="post" class="flex flex-col items-center justify-center gap-2">
-    <h1 class="text-xl">{{_('Log In')}}</h1>
-    {{form.username()}}
-    {{form.password()}}
-    {{form.submit()}}
-    {{form.csrf_token()}}
+    <h1 class="text-xl">{{_('Create new QR code')}}</h1>
+    {{form.name()}}
+    {{form.description()}}
+    {{form.target()}}
+    {{form.ecc_level()}}
   </form>
 </div>
 {% endblock content %}

@@ -2,7 +2,7 @@
     <a href="{{url_for('IndexController.app_index')}}" id="logo" class="text-xl shadow-md px-10 h-fit w-full py-3 hover:bg-black/10 transition-all">
         <p class="mx-auto text-center">QRThing</p>
     </a>
-    <a class="menu-item mx-4 px-2 py-2 flex w-max flex-row items-center border-slate-300 border rounded-md hover:shadow-md cursor-pointer transition-all">
+    <a href="{{url_for('QRController.new_qr')}}" class="menu-item mx-4 px-2 py-2 flex w-max flex-row items-center border-slate-300 border rounded-md hover:shadow-md cursor-pointer transition-all">
         <i class="bi bi-qr-code text-xl mr-2"></i>
         <b>{{_('Create new code')}}</b>
     </a>
