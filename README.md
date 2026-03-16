@@ -1,6 +1,6 @@
-# QRThing
+# LinkThing
 
-A self-hosted dynamic QR code generator (WIP)
+A self-hosted dynamic QR code generator and URL shortener (WIP)
 
 # To do
 - [X] Basic boilerplate
