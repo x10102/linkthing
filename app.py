@@ -7,16 +7,21 @@ import bcrypt
 from os import getcwd
 from os.path import exists, join
 
-from flask import Flask
+from misc.typing_hacks import _l
+
+from flask import Flask, request
 from db import database, User, UserRole, DynamicCode
 
 from blueprints.index import IndexController
-from extensions import login_manager
+from extensions import login_manager, babel
 
 app = Flask(__name__)
 cfg_file = 'config.json'
 
 LOGGER_FORMAT_STR = '[%(asctime)s][%(module)s] %(levelname)s: %(message)s'
+
+def get_locale():
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 def init_logger() -> None:
     """
@@ -36,7 +41,8 @@ def make_default_config() -> dict:
     secret_key = secrets.token_urlsafe(24)
     return {
         "SECRET_KEY": secret_key,
-        "DEBUG": False
+        "DEBUG": False,
+        "LANGUAGES": ['en', 'cs']
         }
 
 def init_db():
@@ -67,9 +73,10 @@ def init_app():
     create_administrator()
     # Set up login manager
     login_manager.session_protection = "basic"
-    login_manager.login_message = u"Log in to access this page"
+    login_manager.login_message = _l('Log in to access this page')
     login_manager.user_loader(lambda uid: User.get_or_none(uid))
     login_manager.init_app(app)
+    babel.init_app(app, locale_selector=get_locale)
 
 if __name__ == '__main__':
     init_logger()

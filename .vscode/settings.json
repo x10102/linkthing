@@ -1,4 +1,4 @@
 {
   "emmet.includeLanguages": {"jinja-html": "html"},
-  "tailwindCSS.includeLanguages": {"jinja-html": "html"}
+  "tailwindCSS.includeLanguages": {"jinja-html": "html"},
 }
