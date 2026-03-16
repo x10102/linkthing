@@ -1,4 +1,4 @@
-from peewee import SqliteDatabase, Model, TextField, BooleanField, AutoField, BlobField, UUIDField, ForeignKeyField, IntegerField, CharField
+from peewee import SqliteDatabase, Model, TextField, BooleanField, AutoField, BlobField, UUIDField, ForeignKeyField, IntegerField, CharField, Check
 
 database = SqliteDatabase('data/qrthing.db')
 
@@ -17,6 +17,7 @@ class User(BaseModel):
     password = BlobField()
     is_active = BooleanField(default=True)
     role = ForeignKeyField(UserRole, null=False, backref='users')
+    language = CharField(5, default='en')
     
     # Flask-Login stuff
     is_anonymous = False
@@ -29,3 +30,4 @@ class DynamicCode(BaseModel):
     target = TextField()
     is_active = BooleanField(null=False, default=True)
     owner = ForeignKeyField(User, backref='codes')
+    ecc_level = IntegerField(null=False, constraints=[Check('ecc_level >= 0 AND ecc_level <= 3')])
