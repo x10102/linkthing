@@ -2,13 +2,16 @@ import waitress
 import json
 import secrets
 import logging
+from logging import info, warning, error
+import bcrypt
 from os import getcwd
 from os.path import exists, join
 
 from flask import Flask
-from db import database, User
+from db import database, User, UserRole, DynamicCode
 
 from blueprints.index import IndexController
+from extensions import login_manager
 
 app = Flask(__name__)
 cfg_file = 'config.json'
@@ -38,10 +41,20 @@ def make_default_config() -> dict:
 
 def init_db():
     database.connect()
-    database.create_tables([User])
+    database.create_tables([User, UserRole, DynamicCode])
+    role_user = UserRole.insert(id=1, name="user").on_conflict_ignore().execute()
+    role_admin = UserRole.insert(id=2, name="administrator").on_conflict_ignore().execute()
 
 def register_blueprints():
     app.register_blueprint(IndexController)
+
+# Sounds cooler than just 'admin' imo
+def create_administrator(username: str = 'sysop', password: str = 'mikumiku'):
+    admin_role = UserRole.get_by_id(2)
+    if len(list(admin_role.users)) == 0:
+        hashed_pw = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+        new_admin = User.create(username=username, password=hashed_pw, role=admin_role)
+        info(f"New admin created with ID {new_admin.id}")
 
 def init_app():
     cfg_path = join(getcwd(), cfg_file)
@@ -51,6 +64,12 @@ def init_app():
         new_config.close()
     app.config.from_file(cfg_file, json.load)
     register_blueprints()
+    create_administrator()
+    # Set up login manager
+    login_manager.session_protection = "basic"
+    login_manager.login_message = u"Log in to access this page"
+    login_manager.user_loader(lambda uid: User.get_or_none(uid))
+    login_manager.init_app(app)
 
 if __name__ == '__main__':
     init_logger()
